@@ -1,0 +1,12 @@
+
+GKE_CLUSTER_NAME="gcgs-cluster-z1"
+GKE_VERSION="1.19"
+MACHINE_TYPE="c2-standard-4"
+REGION_US="us-central1"
+REGION_EU=""
+REGION_AP=""
+MIN_NODES=1
+MAX_NODES=5
+
+GCGS_CLUSTER_NAME=gs-cluster-z1
+GCGS_REALM_NAME="gs-realm"
