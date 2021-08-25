@@ -21,32 +21,42 @@ import json
 # Config
 ####################################################
 
-simulator_config = {
-    'host': "127.0.0.1", #socket.gethostbyname(container_name),
+config = {
+    'host': "0.0.0.0", #socket.gethostbyname(container_name),
     'port': 5000
 }
 
-print('[ DEBUG ] UDP Listener Running on {}.{}'.format(simulator_config['host'],simulator_config['port']))
+print('[ DEBUG ] UDP Listener Running on {}.{}'.format(config['host'],config['port']))
 
 ####################################################
 # Functions
 ####################################################
 
-def send_tcp(socket_tcp_obj, payload):
-    try:
-        if type(payload) is dict:
-            payload = json.dumps(payload).encode('utf-8')
-        else:
-            payload = '{}'.format(payload).encode('utf-8')
+def udp_listen(ip_addr, port):
+    
+    bufferSize  = 1024
+    
+    # Create a datagram socket
+    UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+    
+    # Bind to address and ip
+    UDPServerSocket.bind((ip_addr, port))
+    
+    while True:
         
-        #socket_tcp_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #socket_tcp_obj.connect((host, port))
-        socket_tcp_obj.sendall(payload)
-        print('[ INFO ] TCP payload: {}'.format(payload))
-        #socket_tcp_obj.close()
-    except Exception as e:
-        print('[ EXCEPTION ] {}'.format(e))
-    return None
+        bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+        
+        message = bytesAddressPair[0]
+        address = bytesAddressPair[1]
+        
+        clientMsg = "Message from Client: {}".format(message)
+        clientIP  = "Client IP Address:   {}".format(address)
+        
+        print(clientMsg)
+        print(clientIP)
+        
+        # Sending a reply to client
+        #UDPServerSocket.sendto(str.encode(bytesToSend, address)
 
 
 def send_udp(socket_udp_obj, host, port, payload):
@@ -62,7 +72,7 @@ def send_udp(socket_udp_obj, host, port, payload):
         #socket_udp_obj.close()
     except Exception as e:
         print('[ EXCEPTION ] {}'.format(e))
-    return None
+
 
 
 ####################################################
