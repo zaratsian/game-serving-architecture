@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"time"
+	"regexp"
 
 	//"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -52,14 +53,30 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	for {
-		pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
-		if err != nil {
-			panic(err.Error())
-		}
-		fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))	
-
-		time.Sleep(10 * time.Second)
+	
+	// get pods
+	pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
 	}
+
+	//fmt.Printf("%v\n",pods.Items)
+
+	for _, pod := range pods.Items {
+		
+		// https://pkg.go.dev/github.com/miekg/coredns/plugin/kubernetes/object
+		match, _ := regexp.MatchString("fleet-spec-z1", pod.GetName())
+		if match {
+			fmt.Printf("%v\n\n",pod.Status.ExternalIP)
+			fmt.Printf("%v %v\n", pod.GetName(), pod.GetCreationTimestamp())
+		}
+		
+	}
+
+	//fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))	
+
+	time.Sleep(1 * time.Second)
+	
+
 	
 }
