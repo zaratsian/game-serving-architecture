@@ -39,6 +39,7 @@ const (
 )
 
 func main() {
+	
 	// Connect to Open Match Backend.
 	conn, err := grpc.Dial(omBackendEndpoint, grpc.WithInsecure())
 	if err != nil {
@@ -115,7 +116,9 @@ func fetch(be pb.BackendServiceClient, p *pb.MatchProfile) ([]*pb.Match, error) 
 }
 
 func assign(be pb.BackendServiceClient, matches []*pb.Match) error {
+
 	for _, match := range matches {
+		
 		ticketIDs := []string{}
 		for _, t := range match.GetTickets() {
 			ticketIDs = append(ticketIDs, t.Id)

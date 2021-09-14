@@ -1,11 +1,23 @@
 # Load Config
 include ./config
 
-deploy-all: create-gke-cluster \
+deploy-agones: create-gke-cluster \
 	get-gke-credentials \
 	create-gke-namespace \
 	install-agones \
 	validate-agones
+
+#deploy-gcgs: gcgs-create-realm \
+#	gcgs-create-cluster \
+#	gcgs-deployment \
+#	gcgs-deployment-create-configs \
+#	gcgs-deployment-update-to-fleet-spec-3 \
+#	gcgs-validate-rollout
+
+# Used for testing
+deploy-gcgs: gcgs-create-cluster \
+	gcgs-deployment-update-to-fleet-spec-3 \
+	gcgs-validate-rollout
 
 create-gke-cluster:
 	# Create Google GKE Clusters
