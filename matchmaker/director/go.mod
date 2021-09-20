@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker101/director
+module open-match.dev/open-match/tutorials/matchmaker102/director
 
 go 1.14
 

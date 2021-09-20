@@ -16,7 +16,8 @@ FROM golang:alpine as go
 WORKDIR /app
 ENV GO111MODULE=on
 
-COPY . .
+COPY ./director .
+RUN go mod download open-match.dev/open-match
 RUN go build -o director .
 
 CMD ["/app/director"]

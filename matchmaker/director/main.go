@@ -34,12 +34,11 @@ const (
 	// The endpoint for the Open Match Backend service.
 	omBackendEndpoint = "open-match-backend.open-match.svc.cluster.local:50505"
 	// The Host and Port for the Match Function service endpoint.
-	functionHostName       = "mm102-tutorial-matchfunction.mm102-tutorial.svc.cluster.local"
+	functionHostName       = "NAMESPACE_MATCHMAKER-matchfunction.NAMESPACE_MATCHMAKER.svc.cluster.local"
 	functionPort     int32 = 50502
 )
 
 func main() {
-	
 	// Connect to Open Match Backend.
 	conn, err := grpc.Dial(omBackendEndpoint, grpc.WithInsecure())
 	if err != nil {
@@ -116,9 +115,7 @@ func fetch(be pb.BackendServiceClient, p *pb.MatchProfile) ([]*pb.Match, error) 
 }
 
 func assign(be pb.BackendServiceClient, matches []*pb.Match) error {
-
 	for _, match := range matches {
-		
 		ticketIDs := []string{}
 		for _, t := range match.GetTickets() {
 			ticketIDs = append(ticketIDs, t.Id)

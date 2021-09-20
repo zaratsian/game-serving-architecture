@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker101/matchfunction
+module open-match.dev/open-match/tutorials/matchmaker102/matchfunction
 
 go 1.14
 

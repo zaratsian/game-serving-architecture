@@ -43,7 +43,7 @@ install-open-match:
     
 	# Explicitly create namepace
 	#kubectl create namespace open-match
-
+    
 	# Install the core Open Match services.
 	# 01-open-match-core.yaml installs Open Match with the default configs.
 	kubectl apply --namespace open-match \

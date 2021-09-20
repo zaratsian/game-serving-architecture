@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker101/frontend
+module open-match.dev/open-match/tutorials/matchmaker102/frontend
 
 go 1.14
 
