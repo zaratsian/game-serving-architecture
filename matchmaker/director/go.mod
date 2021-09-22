@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker102/director
+module github.com/zaratsian/game-serving-architecture/matchmaker/director
 
 go 1.14
 

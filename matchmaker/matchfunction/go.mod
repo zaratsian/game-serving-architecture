@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker102/matchfunction
+module github.com/zaratsian/game-serving-architecture/matchmaker/matchfunction
 
 go 1.14
 

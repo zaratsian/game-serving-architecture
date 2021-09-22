@@ -1,4 +1,4 @@
-module open-match.dev/open-match/tutorials/matchmaker102/frontend
+module github.com/zaratsian/game-serving-architecture/matchmaker/frontend
 
 go 1.14
 

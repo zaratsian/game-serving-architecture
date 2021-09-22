@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ func makeTicket() *pb.Ticket {
 				gameMode(),
 			},
 			StringArgs: map[string]string{
-				"attributes.role": role(),
+				"attributes.region": region(),
 			},
 		},
 	}
@@ -40,11 +40,11 @@ func makeTicket() *pb.Ticket {
 }
 
 func gameMode() string {
-	modes := []string{"mode.demo", "mode.ctf", "mode.battleroyale"}
+	modes := []string{"mode.creative", "mode.ctf", "mode.battleroyale"}
 	return modes[rand.Intn(len(modes))]
 }
 
-func role() string {
-	roles := []string{"role.dps", "role.support", "role.tank"}
-	return roles[rand.Intn(len(roles))]
+func region() string {
+	regions := []string{"us", "europe", "asia"}
+	return regions[rand.Intn(len(regions))]
 }

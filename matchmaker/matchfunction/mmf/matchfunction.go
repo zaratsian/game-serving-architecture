@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,15 +35,16 @@ const (
 // Run is this match function's implementation of the gRPC call defined in api/matchfunction.proto.
 func (s *MatchFunctionService) Run(req *pb.RunRequest, stream pb.MatchFunction_RunServer) error {
 	// Fetch tickets for the pools specified in the Match Profile.
-	log.Printf("Generating proposals for function %v", req.GetProfile().GetName())
+	log.Printf("Generating proposals for function %v. Profile: %+v", req.GetProfile().GetName(), req.GetProfile())
 
 	poolTickets, err := matchfunction.QueryPools(stream.Context(), s.queryServiceClient, req.GetProfile().GetPools())
+	log.Printf("Pool Tickets: %+v", poolTickets)
 	if err != nil {
 		log.Printf("Failed to query tickets for the given pools, got %s", err.Error())
 		return err
 	}
 
-	// Generate proposals.
+	// Generate proposals
 	proposals, err := makeMatches(req.GetProfile(), poolTickets)
 	if err != nil {
 		log.Printf("Failed to generate matches, got %s", err.Error())
@@ -53,6 +54,7 @@ func (s *MatchFunctionService) Run(req *pb.RunRequest, stream pb.MatchFunction_R
 	log.Printf("Streaming %v proposals to Open Match", len(proposals))
 	// Stream the generated proposals back to Open Match.
 	for _, proposal := range proposals {
+		log.Printf("Proposal: %v", proposal)
 		if err := stream.Send(&pb.RunResponse{Proposal: proposal}); err != nil {
 			log.Printf("Failed to stream proposals to Open Match, got %s", err.Error())
 			return err

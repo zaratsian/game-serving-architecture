@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import (
 // generateProfiles generates test profiles for the matchmaker101 tutorial.
 func generateProfiles() []*pb.MatchProfile {
 	var profiles []*pb.MatchProfile
-	modes := []string{"mode.demo", "mode.ctf", "mode.battleroyale"}
-	roles := []string{"role.dps", "role.support", "role.tank"}
+	modes := []string{"mode.creative", "mode.ctf", "mode.battleroyale"}
+	regions := []string{"us", "europe", "asia"}
 	for _, mode := range modes {
 		var pools []*pb.Pool
-		for _, role := range roles {
+		for _, region := range regions {
 			pools = append(pools, &pb.Pool{
-				Name: fmt.Sprintf("pool_%s_%s", mode, role),
+				Name: fmt.Sprintf("pool_%s_%s", mode, region),
 				TagPresentFilters: []*pb.TagPresentFilter{
 					{
 						Tag: mode,
@@ -37,8 +37,8 @@ func generateProfiles() []*pb.MatchProfile {
 				},
 				StringEqualsFilters: []*pb.StringEqualsFilter{
 					{
-						StringArg: "attributes.role",
-						Value:     role,
+						StringArg: "attributes.region",
+						Value:     region,
 					},
 				},
 			})

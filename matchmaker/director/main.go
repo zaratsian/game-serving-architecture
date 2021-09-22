@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ const (
 
 func main() {
 	// Connect to Open Match Backend.
+	log.Printf("Connecting to Open Match backend")
 	conn, err := grpc.Dial(omBackendEndpoint, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect to Open Match Backend, got %s", err.Error())
@@ -50,16 +51,21 @@ func main() {
 
 	// Generate the profiles to fetch matches for.
 	profiles := generateProfiles()
-	log.Printf("Fetching matches for %v profiles", len(profiles))
 
-	for range time.Tick(time.Second * 5) {
-		// Fetch matches for each profile and make random assignments for Tickets in
-		// the matches returned.
+	for {
+		time.Sleep(time.Second * 5)
+		// Fetch matches for each profile and 
+		// make random assignments for Tickets in the matches returned.
+		log.Printf("Fetching matches for %v profiles", len(profiles))
+		
 		var wg sync.WaitGroup
+
 		for _, p := range profiles {
 			wg.Add(1)
 			go func(wg *sync.WaitGroup, p *pb.MatchProfile) {
 				defer wg.Done()
+				
+
 				matches, err := fetch(be, p)
 				if err != nil {
 					log.Printf("Failed to fetch matches for profile %v, got %s", p.GetName(), err.Error())
@@ -115,12 +121,14 @@ func fetch(be pb.BackendServiceClient, p *pb.MatchProfile) ([]*pb.Match, error) 
 }
 
 func assign(be pb.BackendServiceClient, matches []*pb.Match) error {
+	// For each match, assign tickets to a game server (IP and Port) 
 	for _, match := range matches {
 		ticketIDs := []string{}
 		for _, t := range match.GetTickets() {
 			ticketIDs = append(ticketIDs, t.Id)
 		}
-
+		
+		// Simulate Game Service IP and Port (for demo purposes)
 		conn := fmt.Sprintf("%d.%d.%d.%d:2222", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
 		req := &pb.AssignTicketsRequest{
 			Assignments: []*pb.AssignmentGroup{
@@ -133,6 +141,7 @@ func assign(be pb.BackendServiceClient, matches []*pb.Match) error {
 			},
 		}
 
+		// Assign tickets
 		if _, err := be.AssignTickets(context.Background(), req); err != nil {
 			return fmt.Errorf("AssignTickets failed for match %v, got %w", match.GetMatchId(), err)
 		}
