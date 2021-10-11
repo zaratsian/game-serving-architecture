@@ -20,7 +20,7 @@ import (
 	"open-match.dev/open-match/pkg/pb"
 )
 
-// generateProfiles generates test profiles for the matchmaker101 tutorial.
+// generateProfiles generates match profiles.
 func generateProfiles() []*pb.MatchProfile {
 	var profiles []*pb.MatchProfile
 	modes := []string{"mode.creative", "mode.ctf", "mode.battleroyale"}

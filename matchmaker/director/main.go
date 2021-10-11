@@ -27,8 +27,8 @@ import (
 	"open-match.dev/open-match/pkg/pb"
 )
 
-// The Director in this tutorial continously polls Open Match for the Match
-// Profiles and makes random assignments for the Tickets in the returned matches.
+// The Director continously polls Open Match for the Match Profiles 
+// and makes random assignments for the Tickets in the returned matches.
 
 const (
 	// The endpoint for the Open Match Backend service.
@@ -53,9 +53,12 @@ func main() {
 	profiles := generateProfiles()
 
 	for {
-		time.Sleep(time.Second * 5)
 		// Fetch matches for each profile and 
 		// make random assignments for Tickets in the matches returned.
+
+		// Sleep added mainly for demo/testing purposes.
+		time.Sleep(time.Second * 5)
+
 		log.Printf("Fetching matches for %v profiles", len(profiles))
 		
 		var wg sync.WaitGroup
@@ -65,7 +68,6 @@ func main() {
 			go func(wg *sync.WaitGroup, p *pb.MatchProfile) {
 				defer wg.Done()
 				
-
 				matches, err := fetch(be, p)
 				if err != nil {
 					log.Printf("Failed to fetch matches for profile %v, got %s", p.GetName(), err.Error())

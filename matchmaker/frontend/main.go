@@ -45,7 +45,9 @@ func main() {
 	// For demo purposes
 	// Create a new batch of ticket requests every X seconds.
 	for {
+		// Used for testing - Wait 5 seconds in-between each new "match request"
 		time.Sleep(time.Second * time.Duration(5))
+		
 		//for i := 0; i < ticketsPerIter; i++ {
 			req := &pb.CreateTicketRequest{
 				Ticket: makeTicket(),
@@ -59,6 +61,7 @@ func main() {
 			log.Printf("Ticket created successfully, id: %v\n", resp.Id)
 			go deleteOnAssign(fe, resp)
 		//}
+
 	}
 }
 

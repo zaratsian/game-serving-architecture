@@ -25,7 +25,7 @@ import (
 
 // This match function fetches all the Tickets for all the pools specified in
 // the profile. It uses a configured number of tickets from each pool to generate
-// a Match Proposal. It continues to generate proposals till one of the pools
+// a Match Proposal. It continues to generate proposals until one of the pools
 // runs out of Tickets.
 const (
 	matchName              = "multipool-matchfunction"
@@ -51,8 +51,8 @@ func (s *MatchFunctionService) Run(req *pb.RunRequest, stream pb.MatchFunction_R
 		return err
 	}
 
-	log.Printf("Streaming %v proposals to Open Match", len(proposals))
 	// Stream the generated proposals back to Open Match.
+	log.Printf("Streaming %v proposals to Open Match", len(proposals))
 	for _, proposal := range proposals {
 		log.Printf("Proposal: %v", proposal)
 		if err := stream.Send(&pb.RunResponse{Proposal: proposal}); err != nil {
@@ -77,6 +77,13 @@ func makeMatches(p *pb.MatchProfile, poolTickets map[string][]*pb.Ticket) ([]*pb
 				break
 			}
 
+			fmt.Printf("\n[ DEBUG ] ticket:             %v\n", tickets[0:ticketsPerPoolPerMatch])
+			fmt.Printf("\n[ DEBUG ] ticket (type):      %T\n", tickets[0:ticketsPerPoolPerMatch])
+			fmt.Printf("\n[ DEBUG ] tickets (len):      %v\n", len(tickets))
+			fmt.Printf("\n[ DEBUG ] matchTickets (len): %v\n", len(matchTickets))
+
+			//fmt.Printf("\n[ DEBUG ] ticket parsing:     %v\n", tickets[0:ticketsPerPoolPerMatch].id)
+			
 			// Remove the Tickets from this pool and add to the match proposal.
 			matchTickets = append(matchTickets, tickets[0:ticketsPerPoolPerMatch]...)
 			poolTickets[pool] = tickets[ticketsPerPoolPerMatch:]

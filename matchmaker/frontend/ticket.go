@@ -17,12 +17,20 @@ package main
 import (
 	"math/rand"
 
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/any"
+	"github.com/golang/protobuf/ptypes/wrappers"
+
 	"open-match.dev/open-match/pkg/pb"
 )
 
 // Ticket generates a Ticket with a mode search field that has one of the
 // randomly selected modes.
 func makeTicket() *pb.Ticket {
+
+	v := &wrappers.DoubleValue{Value: 123}
+	a, _ := ptypes.MarshalAny(v)
+
 	ticket := &pb.Ticket{
 		SearchFields: &pb.SearchFields{
 			// Tags can support multiple values but for simplicity, the demo function
@@ -33,6 +41,10 @@ func makeTicket() *pb.Ticket {
 			StringArgs: map[string]string{
 				"attributes.region": region(),
 			},
+
+		},
+		Extensions: map[string]*any.Any{
+				"score": a,
 		},
 	}
 
