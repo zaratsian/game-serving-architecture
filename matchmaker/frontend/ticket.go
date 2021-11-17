@@ -17,9 +17,9 @@ package main
 import (
 	"math/rand"
 
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/any"
-	"github.com/golang/protobuf/ptypes/wrappers"
+	//"github.com/golang/protobuf/ptypes"
+	//"github.com/golang/protobuf/ptypes/any"
+	//"github.com/golang/protobuf/ptypes/wrappers"
 
 	"open-match.dev/open-match/pkg/pb"
 )
@@ -28,24 +28,31 @@ import (
 // randomly selected modes.
 func makeTicket() *pb.Ticket {
 
+	/* // Used with Extensions
 	v := &wrappers.DoubleValue{Value: 123}
 	a, _ := ptypes.MarshalAny(v)
+	*/
 
 	ticket := &pb.Ticket{
 		SearchFields: &pb.SearchFields{
-			// Tags can support multiple values but for simplicity, the demo function
-			// assumes only single mode selection per Ticket.
+			// https://open-match.dev/site/docs/reference/api/#searchfields
 			Tags: []string{
 				gameMode(),
 			},
 			StringArgs: map[string]string{
 				"attributes.region": region(),
 			},
+			DoubleArgs: map[string]float64{
+				"skill": get_skill(),
+			},
 
 		},
+
+		/*
 		Extensions: map[string]*any.Any{
 				"score": a,
 		},
+		*/
 	}
 
 	return ticket
@@ -59,4 +66,9 @@ func gameMode() string {
 func region() string {
 	regions := []string{"us", "europe", "asia"}
 	return regions[rand.Intn(len(regions))]
+}
+
+func get_skill() float64 {
+	skill := 1200 + (rand.Intn(500) - rand.Intn(500))
+	return float64(skill)
 }

@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"time"
+	"sort"
 
 	"open-match.dev/open-match/pkg/matchfunction"
 	"open-match.dev/open-match/pkg/pb"
@@ -29,7 +30,7 @@ import (
 // runs out of Tickets.
 const (
 	matchName              = "multipool-matchfunction"
-	ticketsPerPoolPerMatch = 1
+	ticketsPerPoolPerMatch = 4
 )
 
 // Run is this match function's implementation of the gRPC call defined in api/matchfunction.proto.
@@ -38,7 +39,7 @@ func (s *MatchFunctionService) Run(req *pb.RunRequest, stream pb.MatchFunction_R
 	log.Printf("Generating proposals for function %v. Profile: %+v", req.GetProfile().GetName(), req.GetProfile())
 
 	poolTickets, err := matchfunction.QueryPools(stream.Context(), s.queryServiceClient, req.GetProfile().GetPools())
-	log.Printf("Pool Tickets: %+v", poolTickets)
+	//log.Printf("Pool Tickets: %+v", poolTickets)
 	if err != nil {
 		log.Printf("Failed to query tickets for the given pools, got %s", err.Error())
 		return err
@@ -71,6 +72,7 @@ func makeMatches(p *pb.MatchProfile, poolTickets map[string][]*pb.Ticket) ([]*pb
 		insufficientTickets := false
 		matchTickets := []*pb.Ticket{}
 		for pool, tickets := range poolTickets {
+
 			if len(tickets) < ticketsPerPoolPerMatch {
 				// This pool is completely drained out. Stop creating matches.
 				insufficientTickets = true
@@ -78,12 +80,21 @@ func makeMatches(p *pb.MatchProfile, poolTickets map[string][]*pb.Ticket) ([]*pb
 			}
 
 			fmt.Printf("\n[ DEBUG ] ticket:             %v\n", tickets[0:ticketsPerPoolPerMatch])
-			fmt.Printf("\n[ DEBUG ] ticket (type):      %T\n", tickets[0:ticketsPerPoolPerMatch])
 			fmt.Printf("\n[ DEBUG ] tickets (len):      %v\n", len(tickets))
 			fmt.Printf("\n[ DEBUG ] matchTickets (len): %v\n", len(matchTickets))
 
-			//fmt.Printf("\n[ DEBUG ] ticket parsing:     %v\n", tickets[0:ticketsPerPoolPerMatch].id)
+			fmt.Printf("\n[ DEBUG ] ticket parsing:     %v\n", tickets[0].SearchFields.DoubleArgs["score"])
 			
+
+			fmt.Printf("\n[ DEBUG ] Unsorted Ticket: %v", tickets)
+
+			// Sort the tickets based on skill
+			sort.Slice(tickets, func(i, j int) bool {
+				return tickets[i].SearchFields.DoubleArgs["score"] < tickets[j].SearchFields.DoubleArgs["score"]
+			})
+
+			fmt.Printf("\n[ DEBUG ] Sorted Ticket: %v", tickets)
+
 			// Remove the Tickets from this pool and add to the match proposal.
 			matchTickets = append(matchTickets, tickets[0:ticketsPerPoolPerMatch]...)
 			poolTickets[pool] = tickets[ticketsPerPoolPerMatch:]
