@@ -30,13 +30,13 @@ variable "realm" {
 }
 
 variable "machine_type" {
-  default     = "n1-standard-4"
+  default     = "n1-standard-2"
   description = "The GCE machine type to use for the nodes"
   type        = string
 }
 
 variable "node_count" {
-  default     = "4"
+  default     = "3"
   description = "This is the number of gameserver nodes. The Agones module will automatically create an additional two node pools with 1 node each for 'agones-system' and 'agones-metrics'"
   type        = number
 }

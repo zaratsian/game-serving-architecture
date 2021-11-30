@@ -7,8 +7,6 @@
 This is an example of using [Terraform][tf] to create the supporting infrastructure for Google
 Cloud Game Servers as well as create and rollout a Fleet across all the Game Server Clusters. 
 
-NOTE: This is a modified version of the demo, hosted at https://github.com/googleforgames/cloud-game-servers-examples/tree/master/terraform-4-cluster
-
 This example:
 
 - Creates 4 GKE Clusters:
